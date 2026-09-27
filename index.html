@@ -123,7 +123,7 @@ $('bookingRows').addEventListener('click',function(e){
  const js=document.createElement('script');js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
  js.onload=()=>{
   const streetMap=L.map(mapNode,{zoomControl:true}).setView([41.433,-96.49],14);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(streetMap);
+  const streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(streetMap);\n  const satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});\n  L.control.layers({'Street':streetLayer,'Satellite':satelliteLayer},null,{position:'topright',collapsed:false}).addTo(streetMap);
   const boundary=L.layerGroup().addTo(streetMap);let vertices=[];
   function redraw(){boundary.clearLayers();if(vertices.length>1)L.polygon(vertices,{color:'#1769aa',fillColor:'#1769aa',fillOpacity:.18,dashArray:'7 5'}).addTo(boundary);}
   const drawButton=document.getElementById('freehandBtn');
