@@ -97,12 +97,13 @@ $('bookingRows').addEventListener('click',function(e){
 </script>
 
 <script>
-// Hide Save profile after saving; show it again when profile fields are edited.
+// Hide Save profile after a successful save; reveal it when a field changes.
 (()=>{
   const saveButton=document.querySelector('#account button[onclick="saveProfile()"]');
   const fields=['profileName','businessName','profileEmail','profilePhone'].map(id=>document.getElementById(id));
   if(!saveButton)return;
-  saveButton.addEventListener('click',()=>{saveButton.hidden=true;});
+  const save=window.saveProfile;
+  window.saveProfile=function(){save();saveButton.hidden=true;};
   fields.forEach(field=>field.addEventListener('input',()=>{saveButton.hidden=false;}));
 })();
 </script>
