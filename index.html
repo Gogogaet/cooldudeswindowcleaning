@@ -95,4 +95,15 @@ $('bookingRows').addEventListener('click',function(e){
   if(button)window.deleteBooking(button.getAttribute('data-delete-booking'));
 });
 </script>
+
+<script>
+// Hide Save profile after saving; show it again when profile fields are edited.
+(()=>{
+  const saveButton=document.querySelector('#account button[onclick="saveProfile()"]');
+  const fields=['profileName','businessName','profileEmail','profilePhone'].map(id=>document.getElementById(id));
+  if(!saveButton)return;
+  saveButton.addEventListener('click',()=>{saveButton.hidden=true;});
+  fields.forEach(field=>field.addEventListener('input',()=>{saveButton.hidden=false;}));
+})();
+</script>
 </body></html>
