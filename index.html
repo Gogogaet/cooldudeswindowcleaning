@@ -154,4 +154,9 @@ $('bookingRows').addEventListener('click',function(e){
  requestAnimationFrame(resizeMap);
 })();
 </script>
+
+<script>
+// Recover from partially unavailable OSM tiles and keep drawing controls consistent.
+(()=>{const map=window.coolDudesStreetMap;if(!map)return;let fallbackUsed=false;map.eachLayer(layer=>{if(!layer._url||!layer._url.includes('tile.openstreetmap.org'))return;layer.on('tileerror',()=>{if(fallbackUsed)return;fallbackUsed=true;map.removeLayer(layer);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap contributors © CARTO'}).addTo(map);});});const draw=document.getElementById('freehandBtn');if(draw)draw.addEventListener('click',()=>setTimeout(()=>{if(draw.classList.contains('selected')){map.dragging.disable();map.doubleClickZoom.disable();}else{map.dragging.enable();map.doubleClickZoom.enable();}},0));})();
+</script>
 </body></html>
