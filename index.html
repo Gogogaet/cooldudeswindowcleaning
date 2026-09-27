@@ -111,4 +111,9 @@ $('bookingRows').addEventListener('click',function(e){
 // Use Google Maps as the territory map's street layer.
 (()=>{const frame=document.querySelector('#map iframe');if(frame){frame.title='Google Maps — Fremont service territory';frame.src='https://www.google.com/maps?output=embed&q=Fremont%2C%20Nebraska&z=14';}})();
 </script>
+
+<script>
+// Keep the street layer aligned with the interactive territory overlay.
+(()=>{const map=document.getElementById('map'),world=document.getElementById('mapWorld'),frame=map?.querySelector('iframe');if(!map||!world||!frame)return;const sync=()=>{frame.style.transform=world.style.transform||'none';frame.style.transformOrigin='0 0';frame.style.width='100%';frame.style.height='100%'};new MutationObserver(sync).observe(world,{attributes:true,attributeFilter:['style']});sync();map.style.touchAction='none';})();
+</script>
 </body></html>
