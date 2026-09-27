@@ -80,4 +80,19 @@ const oldRenderDoors=renderDoors;renderDoors=()=>{oldRenderDoors();draw()};
 draw();
 })();
 </script>
+
+<script>
+// Delete bookings without a native confirmation dialog (often blocked in embedded previews).
+window.deleteBooking=function(id){
+  const booking=data.bookings.find(b=>String(b.id)===String(id));
+  if(!booking)return;
+  data.bookings=data.bookings.filter(b=>String(b.id)!==String(id));
+  persist();
+  showTab('bookings');
+};
+$('bookingRows').addEventListener('click',function(e){
+  const button=e.target.closest('[data-delete-booking]');
+  if(button)window.deleteBooking(button.getAttribute('data-delete-booking'));
+});
+</script>
 </body></html>
