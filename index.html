@@ -131,7 +131,7 @@ $('bookingRows').addEventListener('click',function(e){
   const finish=document.getElementById('finishBoundary'),clear=document.getElementById('clearBoundary');
   if(finish)finish.addEventListener('click',()=>{streetMap.dragging.enable();streetMap.doubleClickZoom.enable();redraw()});
   if(clear)clear.addEventListener('click',()=>{vertices=[];redraw();streetMap.dragging.enable();streetMap.doubleClickZoom.enable()});
-  streetMap.on('click',e=>{if(typeof mode!=='undefined'&&mode==='draw'){vertices.push(e.latlng);redraw()}});
+  streetMap.on('click',e=>{if(drawButton&&drawButton.classList.contains('selected')){vertices.push(e.latlng);redraw()}});
   const zin=document.getElementById('zoomIn'),zout=document.getElementById('zoomOut'),reset=document.getElementById('resetMap');
   if(zin)zin.onclick=()=>streetMap.zoomIn();if(zout)zout.onclick=()=>streetMap.zoomOut();if(reset)reset.onclick=()=>streetMap.setView([41.433,-96.49],14);
   // Keep Leaflet gestures from triggering the old overlay-only pan handlers.
