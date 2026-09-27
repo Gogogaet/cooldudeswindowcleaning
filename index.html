@@ -76,7 +76,7 @@ $('clearBoundary').onclick=()=>{points=[];mode='';$('freehandBtn').classList.rem
 $('zoomIn').onclick=()=>{zoom=Math.min(3.5,zoom*1.2);transform();save()};$('zoomOut').onclick=()=>{zoom=Math.max(.65,zoom/1.2);transform();save()};$('resetMap').onclick=()=>{zoom=1;panX=panY=0;transform();save()};
 const oldOpenDoor=openDoor;openDoor=()=>{oldOpenDoor();const original=$('modalSave').onclick;$('modalSave').onclick=()=>{original();let d=data.doors[data.doors.length-1];if(d){saved.pins[d.id]={x:500+Math.random()*300-150,y:300+Math.random()*200-100};save();draw()}}};
 // Ensure changes made by status controls remain visible and persistent.
-const oldRenderDoors=renderDoors;renderDoors=()=>{oldRenderDoors();draw()};
+const oldRenderDoors=renderDoors;renderDoors=()=>{oldRenderDoors();map.querySelectorAll(':scope > .pin').forEach(p=>p.remove());draw()};
 draw();
 })();
 </script>
