@@ -143,4 +143,15 @@ $('bookingRows').addEventListener('click',function(e){
  document.head.appendChild(js);
 })();
 </script>
+<script>
+// Leaflet starts while the Territory tab is hidden; recalculate its size when shown.
+(()=>{
+ const originalShowTab=window.showTab;
+ if(typeof originalShowTab==='function')window.showTab=function(id){originalShowTab(id);if(id==='territory')requestAnimationFrame(()=>window.coolDudesStreetMap?.invalidateSize({pan:false}));};
+ const resizeMap=()=>window.coolDudesStreetMap?.invalidateSize({pan:false});
+ document.querySelectorAll('[data-tab="territory"]').forEach(button=>button.addEventListener('click',()=>requestAnimationFrame(resizeMap)));
+ window.addEventListener('resize',resizeMap);
+ requestAnimationFrame(resizeMap);
+})();
+</script>
 </body></html>
