@@ -113,7 +113,34 @@ $('bookingRows').addEventListener('click',function(e){
 </script>
 
 <script>
-// Keep the street layer aligned with the interactive territory overlay.
-(()=>{const map=document.getElementById('map'),world=document.getElementById('mapWorld'),frame=map?.querySelector('iframe');if(!map||!world||!frame)return;const sync=()=>{frame.style.transform=world.style.transform||'none';frame.style.transformOrigin='0 0';frame.style.width='100%';frame.style.height='100%'};new MutationObserver(sync).observe(world,{attributes:true,attributeFilter:['style']});sync();map.style.touchAction='none';})();
+// Replace the static embed with a genuinely interactive Leaflet street map.
+(()=>{
+ const shell=document.getElementById('map'),world=document.getElementById('mapWorld');if(!shell||!world)return;
+ const oldFrame=shell.querySelector('iframe');if(oldFrame)oldFrame.remove();
+ const mapNode=document.createElement('div');mapNode.id='realStreetMap';mapNode.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:0';
+ shell.insertBefore(mapNode,world);world.style.zIndex='2';
+ const css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(css);
+ const js=document.createElement('script');js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+ js.onload=()=>{
+  const streetMap=L.map(mapNode,{zoomControl:true}).setView([41.433,-96.49],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(streetMap);
+  const boundary=L.layerGroup().addTo(streetMap);let vertices=[];
+  function redraw(){boundary.clearLayers();if(vertices.length>1)L.polygon(vertices,{color:'#1769aa',fillColor:'#1769aa',fillOpacity:.18,dashArray:'7 5'}).addTo(boundary);}
+  const drawButton=document.getElementById('freehandBtn');
+  if(drawButton)drawButton.addEventListener('click',()=>{setTimeout(()=>{streetMap.dragging.disable();streetMap.doubleClickZoom.disable();},0)});
+  const finish=document.getElementById('finishBoundary'),clear=document.getElementById('clearBoundary');
+  if(finish)finish.addEventListener('click',()=>{streetMap.dragging.enable();streetMap.doubleClickZoom.enable();redraw()});
+  if(clear)clear.addEventListener('click',()=>{vertices=[];redraw();streetMap.dragging.enable();streetMap.doubleClickZoom.enable()});
+  streetMap.on('click',e=>{if(typeof mode!=='undefined'&&mode==='draw'){vertices.push(e.latlng);redraw()}});
+  const zin=document.getElementById('zoomIn'),zout=document.getElementById('zoomOut'),reset=document.getElementById('resetMap');
+  if(zin)zin.onclick=()=>streetMap.zoomIn();if(zout)zout.onclick=()=>streetMap.zoomOut();if(reset)reset.onclick=()=>streetMap.setView([41.433,-96.49],14);
+  // Keep Leaflet gestures from triggering the old overlay-only pan handlers.
+  ['pointerdown','pointermove','pointerup','wheel'].forEach(type=>mapNode.addEventListener(type,e=>e.stopPropagation()));
+  mapNode.addEventListener('wheel',e=>e.stopPropagation(),{passive:true});
+  window.coolDudesStreetMap=streetMap;
+ };
+ js.onerror=()=>{mapNode.innerHTML='<div style="padding:16px;background:white;color:#102b43">Interactive map library could not load. Check your internet connection and refresh.</div>'};
+ document.head.appendChild(js);
+})();
 </script>
 </body></html>
